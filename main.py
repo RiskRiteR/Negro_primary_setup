@@ -1,106 +1,143 @@
-import threading
-import pyautogui as pag
-from pprint import pprint
-import os
+import asyncio
 import cv2 as cv
-import numpy as np
-from time import time, sleep
-from win_cap_detect import WindowCapture
+from time import sleep
 from vision import Vision
-from threading import Thread
+from win_cap_detect import WindowCapture
 from logic import LogicPositioning, LogicState
 
 
-# WindowCapture.list_window_names()
-# print(pag.position())
-# exit()
+if __name__ == '__main__':
 
-DEBUG = True
-eve_window = WindowCapture('EVE - Mantori Shaishi')
+    # WindowCapture.list_window_names()
+    # print(pag.position())
+    # exit()
 
+    DEBUG = False
 
+    desktop = WindowCapture()
+    logic = LogicPositioning()
+    vision = Vision()
 
-vision = Vision()
-logic = LogicPositioning()
+    while True:
+        if logic.state == LogicState.SCAN_START_LAUNCHER:
+            desktop.update_template('templates/start/start_launcher.png')
+            sleep(1)
+            asyncio.run(desktop.main())
+            targets = vision.get_click_center(desktop.rectangles)
+            logic.update_win_pos_targets(desktop.window_rect, targets)
+            asyncio.run(logic.main())
 
-eve_window.start()
+        elif logic.state == LogicState.START_LAUNCHER:
+            asyncio.run(logic.main())
 
-logic.start()
-detector.update_temp('templates/exiting_dock.jpg')
+        elif logic.state == LogicState.SCAN_START_GAME:
+            desktop.update_template('templates/start/start_game.png')
+            sleep(1)
+            asyncio.run(desktop.main())
+            targets = vision.get_click_center(desktop.rectangles)
+            logic.update_win_pos_targets(desktop.window_rect, targets)
+            asyncio.run(logic.main())
 
-# loop_time = time()
-while True:
+        elif logic.state == LogicState.START_GAME:
+            asyncio.run(logic.main())
 
-    if eve_window.screenshot is None:
-        continue
+        elif logic.state == LogicState.SCAN_LOCK_LAUNCHER:
+            desktop.update_template('templates/start/lock_launcher.png')
+            sleep(1)
+            asyncio.run(desktop.main())
+            targets = vision.get_click_edge_on_the_right(desktop.rectangles)
+            logic.update_win_pos_targets(desktop.window_rect, targets)
+            asyncio.run(logic.main())
 
-    detector.update(eve_window.screenshot)
-    logic.update_win_cap(eve_window.window_rect)
+        elif logic.state == LogicState.LOCK_LAUNCHER:
+            asyncio.run(logic.main())
 
-    if logic.state == LogicState.INITIALIZING:
-        while True:
-            targets = vision.get_click_for_chat(detector.rectangles)
-            logic.update_targets(targets)
-            if logic.state == LogicState.DOCK:
-                break
+        elif logic.state == LogicState.STOP_LAUNCH:
+            asyncio.run(logic.main())
+            cv.destroyAllWindows()
+            break
 
-    elif logic.state == LogicState.DOCK:
-        detector.update_temp('templates/chat_local.jpg')
-        while True:
-            targets = vision.get_click_for_chat(detector.rectangles)
-            logic.update_targets(targets)
-            if logic.state == LogicState.CUSTOM_CHAT:
-                break
+        sleep(1)
 
-    elif logic.state == LogicState.CUSTOM_CHAT:
-        pass
+        if desktop.screenshot is None:
+            continue
 
-    elif logic.state == LogicState.SCAN_NEOCOM:
-        detector.update_temp('templates/neocom.jpg')
-        while True:
-            targets = vision.get_click_for_neocom(detector.rectangles)
-            logic.update_targets(targets)
-            if logic.state == LogicState.CUSTOM_NEOCOM:
-                break
+        if DEBUG:
+            debug_image = vision.draw_rectangles(desktop.screenshot, desktop.rectangles)
+            cv.imshow('Desktop', debug_image)
 
-    elif logic.state == LogicState.CUSTOM_NEOCOM:
-        pass
+        key = cv.waitKey(1)
+        if key == ord("q"):
+            cv.destroyAllWindows()
+            break
 
-    elif logic.state == LogicState.SCAN_LOCK_NEOCOM:
-        detector.update_temp('templates/lock_neocom.jpg')
-        while True:
-            targets = vision.get_click_center(detector.rectangles)
-            logic.update_targets(targets)
-            if logic.state == LogicState.LOCK_NEOCOM:
-                break
+# ===================================================================================================================
 
-    elif logic.state == LogicState.LOCK_NEOCOM:
-        pass
+    eve_window = WindowCapture('EVE')
 
-    elif logic.state == LogicState.SCAN_UNNECESSARY_MENU:
-        detector.update_temp('templates/unnecessary_menu.jpg')
-        while True:
-            targets = vision.get_click_center(detector.rectangles)
-            logic.update_targets(targets)
-            if logic.state == LogicState.LOCK_NEOCOM:
-                break
+    while True:
+        if logic.state == LogicState.SCAN_DETECT_GIFT:
+            eve_window.update_template('templates/start/detect_gift.png')
+            sleep(1)
+            asyncio.run(eve_window.main())
+            targets = vision.get_click_edge_on_the_right(eve_window.rectangles)
+            logic.update_win_pos_targets(eve_window.window_rect, targets)
+            asyncio.run(logic.main())
 
-    elif logic.state == LogicState.LOCK_UNNECESSARY_MENU:
-        pass
+        elif logic.state == LogicState.LOCK_GIFT:
+            asyncio.run(logic.main())
 
-    if DEBUG:
-        debug_image = vision.draw_rectangles(eve_window.screenshot, detector.rectangles)
-        cv.imshow('Window', debug_image)
+        elif logic.state == LogicState.CHECK_FALSE_GIFT:
+            eve_window.update_template('templates/start/detect_gift.png')
+            sleep(1)
+            asyncio.run(eve_window.main())
+            targets = vision.get_click_edge_on_the_right(eve_window.rectangles)
+            logic.update_win_pos_targets(eve_window.window_rect, targets)
+            asyncio.run(logic.main())
 
-    # print('FPS {}'.format(1 / (time() - loop_time)))
-    # loop_time = time()
+        elif logic.state == LogicState.FINISH_LOCK_GIFT:
+            asyncio.run(logic.main())
 
-    key = cv.waitKey(1000)
-    if key == ord("q"):
-        eve_window.stop()
-        detector.stop()
-        cv.destroyAllWindows()
-        logic.stop()
-        break
+        elif logic.state == LogicState.ESC_SETTINGS_GRAPHICS:
+            asyncio.run(logic.main())
 
-print("[INFO] Done.")
+        elif logic.state == LogicState.START_CHAR_MAIN:
+            asyncio.run(logic.main())
+            cv.destroyAllWindows()
+            break
+
+        sleep(1)
+
+        if eve_window.screenshot is None:
+            continue
+
+        if DEBUG:
+            debug_image = vision.draw_rectangles(eve_window.screenshot, eve_window.rectangles)
+            cv.imshow('EVE', debug_image)
+
+        key = cv.waitKey(1)
+        if key == ord("q"):
+            cv.destroyAllWindows()
+            break
+
+# ===================================================================================================================
+
+    window_work = WindowCapture('EVE - Mantori Shaishi')
+
+    while True:
+
+        sleep(1)
+
+        if window_work.screenshot is None:
+            continue
+
+        if DEBUG:
+            debug_image = vision.draw_rectangles(window_work.screenshot, window_work.rectangles)
+            cv.imshow('Window', debug_image)
+
+        key = cv.waitKey(1)
+        if key == ord("q"):
+            cv.destroyAllWindows()
+            break
+
+    print("[INFO] Done.")

@@ -1,29 +1,20 @@
 import cv2 as cv
-import numpy as np
 
 
 class Vision:
     def get_click_center(self, rectangles):
         points = []
         for (x, y, w, h) in rectangles:
-            center_x = x + int(w/2)
-            center_y = y + int(h/2)
-            points.append((center_x, center_y))
-        return points
-
-    def get_click_for_chat(self, rectangles):
-        points = []
-        for (x, y, w, h) in rectangles:
-            center_x = x + int(w/2)
-            center_y = y
-            points.append((center_x, center_y))
-        return points
-
-    def get_click_for_neocom(self, rectangles):
-        points = []
-        for (x, y, w, h) in rectangles:
             center_x = x + int(w / 2)
-            center_y = y - 20
+            center_y = y + int(h / 2)
+            points.append((center_x, center_y))
+        return points
+
+    def get_click_edge_on_the_right(self, rectangles):
+        points = []
+        for (x, y, w, h) in rectangles:
+            center_x = x + int(w - 5)
+            center_y = y + int(h / 2)
             points.append((center_x, center_y))
         return points
 
