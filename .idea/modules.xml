@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/setting_up_windows.iml" filepath="$PROJECT_DIR$/.idea/setting_up_windows.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Iodine.iml" filepath="$PROJECT_DIR$/.idea/Iodine.iml" />
     </modules>
   </component>
 </project>

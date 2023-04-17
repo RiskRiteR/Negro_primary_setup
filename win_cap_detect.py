@@ -1,8 +1,10 @@
-import mss
 import asyncio
-import win32gui
+
+import mss
 import cv2 as cv
 import numpy as np
+import win32gui
+import win32com.client
 
 
 class WindowCapture:
@@ -24,7 +26,9 @@ class WindowCapture:
             self.window_handle = win32gui.GetDesktopWindow()
         else:
             self.window_handle = win32gui.FindWindow(None, window_name)
-            win32gui.SetForegroundWindow(win32gui.FindWindow(None, window_name))
+            shell = win32com.client.Dispatch("WScript.Shell")
+            shell.SendKeys('%')
+            win32gui.SetForegroundWindow(self.window_handle)
 
     async def get_position_window(self):
         self.window_rect = win32gui.GetWindowRect(self.window_handle)
@@ -71,7 +75,10 @@ class WindowCapture:
         return None
 
     def update_template(self, template):
-        self.template = cv.imread(template, cv.IMREAD_UNCHANGED)
+        if not template is None:
+            self.template = cv.imread(template, cv.IMREAD_UNCHANGED)
+        else:
+            self.template = None
         return None
 
     @staticmethod
@@ -84,4 +91,5 @@ class WindowCapture:
     async def main(self):
         task_1 = asyncio.create_task(self.get_position_window())
         task_2 = asyncio.create_task(self.get_screenshot())
-        task_3 = asyncio.create_task(self.find_img())
+        if not self.template is None:
+            task_3 = asyncio.create_task(self.find_img())
