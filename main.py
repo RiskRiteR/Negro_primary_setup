@@ -179,6 +179,28 @@ if __name__ == '__main__':
         elif logic.state == LogicState.SPACE_CUSTOM_WINDOWS:
             asyncio.run(logic.main())
 
+        elif logic.state == LogicState.SCAN_MENU_PROBES_CODE:
+            window_work.update_template('templates/menu_probes.png')
+            sleep(1)
+            asyncio.run(window_work.main())
+            targets = vision.get_click_center(window_work.rectangles)
+            logic.update_targets(targets)
+            asyncio.run(logic.main())
+
+        elif logic.state == LogicState.CUSTOM_MENU_PROBES_CODE:
+            asyncio.run(logic.main())
+
+        elif logic.state == LogicState.SCAN_MENU_PROBES_NAME:
+            window_work.update_template('templates/menu_probes.png')
+            sleep(1)
+            asyncio.run(window_work.main())
+            targets = vision.get_click_center(window_work.rectangles)
+            logic.update_targets(targets)
+            asyncio.run(logic.main())
+
+        elif logic.state == LogicState.CUSTOM_MENU_PROBES_NAME:
+            asyncio.run(logic.main())
+
         elif logic.state == LogicState.EXIT_PROG:
             asyncio.run(logic.main())
             cv.destroyAllWindows()

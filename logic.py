@@ -34,8 +34,11 @@ class LogicState:
     CUSTOM_OVERVIEW = 21
     STEERING_CONTROL = 22
     SPACE_CUSTOM_WINDOWS = 23
-    EXIT_PROG = 24
-    STOP = 25
+    SCAN_MENU_PROBES_CODE = 24
+    CUSTOM_MENU_PROBES_CODE = 25
+    SCAN_MENU_PROBES_NAME = 26
+    CUSTOM_MENU_PROBES_NAME = 27
+    EXIT_PROG = 28
 
 
 class LogicPositioning:
@@ -1180,6 +1183,11 @@ class LogicPositioning:
         pag.mouseUp((pag.position()), button='left')
         sleep(random.uniform(0.7, 1.2))
 
+        pag.mouseDown((pag.position()), button='left')
+        sleep(random.uniform(0.2, 0.4))
+        pag.mouseUp((pag.position()), button='left')
+        sleep(random.uniform(0.7, 1.2))
+
         MouseUtils.move_to(self.get_screen_position((1630, 68)), 30, 3)
         sleep(random.uniform(0.3, 0.6))
 
@@ -1808,6 +1816,7 @@ class LogicPositioning:
         sleep(random.uniform(0.2, 0.4))
         pag.mouseUp((pag.position()), button='left')
         sleep(random.uniform(0.7, 1.2))
+
         """Настройка позиции окна дронов.___________________________________________________________________________"""
         MouseUtils.move_to(self.get_screen_position((1341, 970)), 2, 20)
         sleep(random.uniform(0.3, 0.6))
@@ -1821,7 +1830,7 @@ class LogicPositioning:
         pag.mouseUp((pag.position()), button='left')
         sleep(random.uniform(0.7, 1.2))
 
-        MouseUtils.move_to(self.get_screen_position((1863, 887)), 0, 0)
+        MouseUtils.move_to(self.get_screen_position((1863, 887)), 2, 2)
         sleep(random.uniform(0.3, 0.6))
 
         pag.mouseDown((pag.position()), button='left')
@@ -2118,6 +2127,19 @@ class LogicPositioning:
         pag.keyUp('alt')
         sleep(random.uniform(0.7, 1.2))
 
+        MouseUtils.move_to(self.get_screen_position((1858, 50)), 2, 2)
+        sleep(random.uniform(0.3, 0.6))
+
+        pag.mouseDown((pag.position()), button='left')
+        sleep(random.uniform(0.2, 0.4))
+        pag.mouseUp((pag.position()), button='left')
+        sleep(random.uniform(0.7, 1.2))
+
+        pag.keyDown('f9')
+        sleep(random.uniform(0.4, 0.6))
+        pag.keyUp('f9')
+        sleep(random.uniform(0.7, 1.2))
+
         MouseUtils.move_to(self.get_screen_position((950, 368)), 50, 2)
         sleep(random.uniform(0.3, 0.6))
 
@@ -2204,6 +2226,19 @@ class LogicPositioning:
         pag.keyUp('alt')
         sleep(random.uniform(0.7, 1.2))
 
+        MouseUtils.move_to(self.get_screen_position((1858, 50)), 2, 2)
+        sleep(random.uniform(0.3, 0.6))
+
+        pag.mouseDown((pag.position()), button='left')
+        sleep(random.uniform(0.2, 0.4))
+        pag.mouseUp((pag.position()), button='left')
+        sleep(random.uniform(0.7, 1.2))
+
+        pag.keyDown('f9')
+        sleep(random.uniform(0.4, 0.6))
+        pag.keyUp('f9')
+        sleep(random.uniform(0.7, 1.2))
+
         MouseUtils.move_to(self.get_screen_position((960, 343)), 50, 2)
         sleep(random.uniform(0.3, 0.6))
 
@@ -2247,18 +2282,6 @@ class LogicPositioning:
         sleep(random.uniform(0.2, 0.4))
 
         MouseUtils.move_to(self.get_screen_position((850, 550)), 2, 50)
-        sleep(random.uniform(0.3, 0.6))
-
-        pag.mouseUp((pag.position()), button='left')
-        sleep(random.uniform(0.7, 1.2))
-
-        MouseUtils.move_to(self.get_screen_position((999, 400)), 1, 3)
-        sleep(random.uniform(0.3, 0.6))
-
-        pag.mouseDown((pag.position()), button='left')
-        sleep(random.uniform(0.2, 0.4))
-
-        MouseUtils.move_to(self.get_screen_position((1025, 400)), 0, 8)
         sleep(random.uniform(0.3, 0.6))
 
         pag.mouseUp((pag.position()), button='left')
@@ -2912,7 +2935,47 @@ class LogicPositioning:
         sleep(random.uniform(0.2, 0.4))
         pag.mouseUp((pag.position()), button='left')
         sleep(random.uniform(0.7, 1.2))
+        return None
 
+    async def custom_probes_code(self):
+        pixel_x = random.randrange(7, 11)
+        MouseUtils.move_to(self.get_screen_position((self.targets[0][0] + pixel_x, self.targets[0][1])), 0, 2)
+        sleep(random.uniform(0.3, 0.6))
+
+        pag.mouseDown((pag.position()), button='left')
+        sleep(random.uniform(0.2, 0.4))
+
+        MouseUtils.move_to((pag.position()[0] + 22, pag.position()[1]), 1, 7)
+        sleep(random.uniform(0.3, 0.6))
+
+        pag.mouseUp((pag.position()), button='left')
+        sleep(random.uniform(0.7, 1.2))
+
+        MouseUtils.move_to(self.get_screen_position((1080, 398)), 10, 2)
+        sleep(random.uniform(0.3, 0.6))
+
+        pag.mouseDown((pag.position()), button='left')
+        sleep(random.uniform(0.2, 0.4))
+        pag.mouseUp((pag.position()), button='left')
+        sleep(random.uniform(0.7, 1.2))
+        return None
+
+    async def custom_probes_name(self):
+        pixel_x = random.randrange(7, 11)
+        MouseUtils.move_to(self.get_screen_position((self.targets[0][0] + pixel_x, self.targets[0][1])), 0, 2)
+        sleep(random.uniform(0.3, 0.6))
+
+        pag.mouseDown((pag.position()), button='left')
+        sleep(random.uniform(0.2, 0.4))
+
+        MouseUtils.move_to((pag.position()[0] + 90, pag.position()[1]), 1, 7)
+        sleep(random.uniform(0.3, 0.6))
+
+        pag.mouseUp((pag.position()), button='left')
+        sleep(random.uniform(0.7, 1.2))
+        return None
+
+    async def close_windows_and_dock(self):
         """Закрываем настроенные окна и возвращаемся на станцию.____________________________________________________"""
         pag.keyDown('alt')
         sleep(random.uniform(0.8, 1.2))
@@ -3142,7 +3205,27 @@ class LogicPositioning:
         elif self.state == LogicState.SPACE_CUSTOM_WINDOWS:
             task = asyncio.create_task(self.space_custom_windows())
             await task
+            self.state = LogicState.SCAN_MENU_PROBES_CODE
+
+        elif self.state == LogicState.SCAN_MENU_PROBES_CODE:
             await asyncio.sleep(random.uniform(1.5, 2))
+            self.state = LogicState.CUSTOM_MENU_PROBES_CODE
+
+        elif self.state == LogicState.CUSTOM_MENU_PROBES_CODE:
+            task = asyncio.create_task(self.custom_probes_code())
+            await task
+            self.state = LogicState.SCAN_MENU_PROBES_NAME
+
+        elif self.state == LogicState.SCAN_MENU_PROBES_NAME:
+            await asyncio.sleep(random.uniform(1.5, 2))
+            self.state = LogicState.CUSTOM_MENU_PROBES_NAME
+
+        elif self.state == LogicState.CUSTOM_MENU_PROBES_NAME:
+            task_1 = asyncio.create_task(self.custom_probes_name())
+            await task_1
+            task_2 = asyncio.create_task(self.close_windows_and_dock())
+            await task_2
+            await asyncio.sleep(random.uniform(10, 15))
             self.state = LogicState.EXIT_PROG
 
         elif self.state == LogicState.EXIT_PROG:
